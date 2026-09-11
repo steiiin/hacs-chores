@@ -1,0 +1,108 @@
+{
+  "title": "HACS Chores",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Set up HACS Chores",
+        "description": "After setup, use Configure to create tasks and household members. Add the bundled dashboard resource as described in the README."
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Es ist bereits ein Haushalt eingerichtet.",
+      "no_items": "Noch keine Einträge vorhanden.",
+      "cancelled": "Abgebrochen.",
+      "concurrent_change": "Die Einstellungen wurden gleichzeitig geändert. Bitte erneut öffnen."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Manage household",
+        "menu_options": {
+          "task_add": "Add task",
+          "task_edit": "Edit task",
+          "task_delete": "Delete task",
+          "member_add": "Add member",
+          "member_edit": "Edit member",
+          "member_delete": "Delete member"
+        }
+      },
+      "task": {
+        "title": "Task",
+        "data": {
+          "title": "Title",
+          "category": "Category",
+          "description": "Description / instructions",
+          "priority": "Priority",
+          "effort_minutes": "Estimated effort (minutes)",
+          "enabled": "Enabled",
+          "kind": "Recurrence"
+        }
+      },
+      "schedule": {
+        "title": "Schedule",
+        "description": "Times use the household time zone. Days 29–31 are clamped to the last day of shorter months.",
+        "data": {
+          "start_date": "Start date",
+          "time": "Due time",
+          "interval": "Interval in calendar days",
+          "weekdays": "Weekdays",
+          "day": "Day of month",
+          "ordinal": "Ordinal",
+          "weekday": "Weekday"
+        }
+      },
+      "member": {
+        "title": "Household member",
+        "description": "Names are labels, not Home Assistant logins. Use a #RRGGBB color.",
+        "data": {
+          "name": "Name",
+          "color": "Color (#RRGGBB)",
+          "active": "Active"
+        }
+      },
+      "confirm_delete": {
+        "title": "Confirm deletion",
+        "description": "Delete {name}? Completion history is retained.",
+        "data": {
+          "confirm": "Yes, delete"
+        }
+      },
+      "task_edit": {
+        "title": "Edit task",
+        "data": {
+          "item_id": "Select"
+        }
+      },
+      "task_delete": {
+        "title": "Delete task",
+        "data": {
+          "item_id": "Select"
+        }
+      },
+      "member_edit": {
+        "title": "Edit member",
+        "data": {
+          "item_id": "Select"
+        }
+      },
+      "member_delete": {
+        "title": "Delete member",
+        "data": {
+          "item_id": "Select"
+        }
+      }
+    },
+    "error": {
+      "invalid_input": "Bitte Eingaben prüfen (Titel max. 120, Kategorie max. 80, Beschreibung max. 4000 Zeichen; mindestens ein Wochentag).",
+      "invalid_color": "Farbe bitte als #RRGGBB eingeben.",
+      "duplicate_name": "Dieser Mitgliedsname existiert bereits."
+    },
+    "abort": {
+      "single_instance_allowed": "Es ist bereits ein Haushalt eingerichtet.",
+      "no_items": "Noch keine Einträge vorhanden.",
+      "cancelled": "Abgebrochen.",
+      "concurrent_change": "Die Einstellungen wurden gleichzeitig geändert. Bitte erneut öffnen."
+    }
+  }
+}

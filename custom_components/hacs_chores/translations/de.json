@@ -1,0 +1,108 @@
+{
+  "title": "HACS Chores",
+  "config": {
+    "step": {
+      "user": {
+        "title": "HACS Chores einrichten",
+        "description": "Nach dem Hinzufügen über „Konfigurieren“ Aufgaben und Haushaltsmitglieder anlegen. Die Dashboard-Karten werden mitgeliefert; die Ressource einmal nach Anleitung hinzufügen."
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Es ist bereits ein Haushalt eingerichtet.",
+      "no_items": "Noch keine Einträge vorhanden.",
+      "cancelled": "Abgebrochen.",
+      "concurrent_change": "Die Einstellungen wurden gleichzeitig geändert. Bitte erneut öffnen."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Haushalt verwalten",
+        "menu_options": {
+          "task_add": "Aufgabe hinzufügen",
+          "task_edit": "Aufgabe bearbeiten",
+          "task_delete": "Aufgabe löschen",
+          "member_add": "Mitglied hinzufügen",
+          "member_edit": "Mitglied bearbeiten",
+          "member_delete": "Mitglied löschen"
+        }
+      },
+      "task": {
+        "title": "Aufgabe",
+        "data": {
+          "title": "Aufgabentitel",
+          "category": "Kategorie",
+          "description": "Beschreibung / Anleitung",
+          "priority": "Priorität",
+          "effort_minutes": "Geschätzter Aufwand (Minuten)",
+          "enabled": "Aufgabe aktiv",
+          "kind": "Wiederholung"
+        }
+      },
+      "schedule": {
+        "title": "Fälligkeit",
+        "description": "Startdatum = erster möglicher Termin. Feste Termine bleiben bei verspäteter Erledigung im Kalender. Bei „nach Erledigung“ beginnt der Abstand mit der Erledigung. Monatstag 29–31 wird in kürzeren Monaten auf den letzten Tag gesetzt.",
+        "data": {
+          "start_date": "Startdatum",
+          "time": "Fällig ab (Uhrzeit im Haushalt)",
+          "interval": "Abstand in Kalendertagen",
+          "weekdays": "Wochentage",
+          "day": "Tag des Monats",
+          "ordinal": "Welcher im Monat?",
+          "weekday": "Wochentag"
+        }
+      },
+      "member": {
+        "title": "Haushaltsmitglied",
+        "description": "Mitglieder sind einfache Namen für das gemeinsame Dashboard. Sie benötigen kein eigenes Home-Assistant-Konto. Farbe als Hexwert, z. B. #538B78.",
+        "data": {
+          "name": "Name",
+          "color": "Farbe (#RRGGBB)",
+          "active": "Aktiv"
+        }
+      },
+      "confirm_delete": {
+        "title": "Löschen bestätigen",
+        "description": "„{name}“ löschen? Der Erledigungsverlauf bleibt für die Statistik erhalten.",
+        "data": {
+          "confirm": "Ja, löschen"
+        }
+      },
+      "task_edit": {
+        "title": "Aufgabe bearbeiten",
+        "data": {
+          "item_id": "Auswahl"
+        }
+      },
+      "task_delete": {
+        "title": "Aufgabe löschen",
+        "data": {
+          "item_id": "Auswahl"
+        }
+      },
+      "member_edit": {
+        "title": "Mitglied bearbeiten",
+        "data": {
+          "item_id": "Auswahl"
+        }
+      },
+      "member_delete": {
+        "title": "Mitglied löschen",
+        "data": {
+          "item_id": "Auswahl"
+        }
+      }
+    },
+    "error": {
+      "invalid_input": "Bitte Eingaben prüfen (Titel max. 120, Kategorie max. 80, Beschreibung max. 4000 Zeichen; mindestens ein Wochentag).",
+      "invalid_color": "Farbe bitte als #RRGGBB eingeben.",
+      "duplicate_name": "Dieser Mitgliedsname existiert bereits."
+    },
+    "abort": {
+      "single_instance_allowed": "Es ist bereits ein Haushalt eingerichtet.",
+      "no_items": "Noch keine Einträge vorhanden.",
+      "cancelled": "Abgebrochen.",
+      "concurrent_change": "Die Einstellungen wurden gleichzeitig geändert. Bitte erneut öffnen."
+    }
+  }
+}

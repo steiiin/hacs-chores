@@ -1,0 +1,29 @@
+complete:
+  name: Aufgabe erledigen
+  description: Bucht eine fällige Aufgabe für ein Haushaltsmitglied. due_at verhindert Doppelbuchungen.
+  fields:
+    task_id:
+      name: Aufgaben-ID
+      required: true
+      selector:
+        text:
+    member_id:
+      name: Mitglieds-ID
+      required: true
+      selector:
+        text:
+    due_at:
+      name: Aktueller Fälligkeitstermin
+      description: Attribut due_at des Fälligkeitssensors unverändert übernehmen.
+      required: true
+      selector:
+        text:
+undo:
+  name: Erledigung rückgängig machen
+  description: Nimmt die letzte Erledigung einer Aufgabe innerhalb von zehn Minuten zurück.
+  fields:
+    completion_id:
+      name: Erledigungs-ID
+      required: true
+      selector:
+        text:

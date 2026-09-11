@@ -1,0 +1,16 @@
+{
+  "domain": "hacs_chores",
+  "name": "HACS Chores",
+  "codeowners": [],
+  "config_flow": true,
+  "dependencies": [
+    "http"
+  ],
+  "documentation": "https://github.com/REPLACE_OWNER/hacs-chores",
+  "integration_type": "hub",
+  "iot_class": "calculated",
+  "issue_tracker": "https://github.com/REPLACE_OWNER/hacs-chores/issues",
+  "requirements": [],
+  "single_config_entry": true,
+  "version": "0.1.0"
+}

@@ -1,0 +1,234 @@
+{
+  "available": true,
+  "timezone": "Europe/Berlin",
+  "now": "2026-09-11T10:00:00+00:00",
+  "tasks": [
+    {
+      "id": "task2",
+      "title": "Wäsche aufhängen",
+      "category": "Wäsche",
+      "description": "Wäsche ausschütteln, aufhängen und die Socken paarweise zusammenstecken.",
+      "priority": 2,
+      "effort_minutes": 15,
+      "enabled": true,
+      "schedule": {
+        "kind": "daily",
+        "interval": 1,
+        "start_date": "2026-08-01",
+        "time": "08:00:00"
+      },
+      "last_done": "2026-09-09T10:00:00+00:00",
+      "last_member_id": "ben",
+      "last_member_name": "Ben",
+      "due_at": "2026-09-10T06:00:00+00:00",
+      "is_due": true
+    },
+    {
+      "id": "task1",
+      "title": "Staubsaugen (Wohnzimmer)",
+      "category": "Staubsaugen",
+      "description": "Spielzeug vorher aufheben. Unter dem Tisch und hinter dem Sofa saugen.",
+      "priority": 3,
+      "effort_minutes": 20,
+      "enabled": true,
+      "schedule": {
+        "kind": "daily",
+        "interval": 1,
+        "start_date": "2026-08-01",
+        "time": "08:00:00"
+      },
+      "last_done": "2026-09-10T10:00:00+00:00",
+      "last_member_id": "mia",
+      "last_member_name": "Mia",
+      "due_at": "2026-09-11T06:00:00+00:00",
+      "is_due": true
+    },
+    {
+      "id": "task3",
+      "title": "Bad aufräumen",
+      "category": "Putzen",
+      "description": "Waschbecken abwischen, Handtücher ordentlich aufhängen und den Papierkorb leeren.",
+      "priority": 2,
+      "effort_minutes": 12,
+      "enabled": true,
+      "schedule": {
+        "kind": "daily",
+        "interval": 1,
+        "start_date": "2026-08-01",
+        "time": "08:00:00"
+      },
+      "last_done": "2026-09-10T10:00:00+00:00",
+      "last_member_id": "ben",
+      "last_member_name": "Ben",
+      "due_at": "2026-09-11T06:00:00+00:00",
+      "is_due": true
+    },
+    {
+      "id": "task0",
+      "title": "Geschirrspüler ausräumen",
+      "category": "Küche",
+      "description": "Sauberes Geschirr in die Schränke räumen. Besteck einsortieren und prüfen, ob noch Wasser auf den Tassen steht.",
+      "priority": 2,
+      "effort_minutes": 8,
+      "enabled": true,
+      "schedule": {
+        "kind": "daily",
+        "interval": 1,
+        "start_date": "2026-08-01",
+        "time": "08:00:00"
+      },
+      "last_done": "2026-09-10T10:00:00+00:00",
+      "last_member_id": "ben",
+      "last_member_name": "Ben",
+      "due_at": "2026-09-11T06:00:00+00:00",
+      "is_due": true
+    },
+    {
+      "id": "task5",
+      "title": "Bettwäsche wechseln",
+      "category": "Wäsche",
+      "description": "Alte Bezüge abziehen und in den Wäschekorb legen. Frische Bezüge findest du im Flurschrank.",
+      "priority": 2,
+      "effort_minutes": 20,
+      "enabled": true,
+      "schedule": {
+        "kind": "daily",
+        "interval": 7,
+        "start_date": "2026-08-01",
+        "time": "08:00:00"
+      },
+      "last_done": "2026-09-10T10:00:00+00:00",
+      "last_member_id": "anna",
+      "last_member_name": "Anna",
+      "due_at": "2026-09-12T06:00:00+00:00",
+      "is_due": false
+    },
+    {
+      "id": "task4",
+      "title": "Pflanzen gießen",
+      "category": "Pflanzen",
+      "description": "Erst die Erde fühlen. Nur gießen, wenn sie trocken ist.",
+      "priority": 1,
+      "effort_minutes": 5,
+      "enabled": true,
+      "schedule": {
+        "kind": "daily",
+        "interval": 7,
+        "start_date": "2026-08-01",
+        "time": "08:00:00"
+      },
+      "last_done": "2026-09-10T10:00:00+00:00",
+      "last_member_id": "mia",
+      "last_member_name": "Mia",
+      "due_at": "2026-09-12T06:00:00+00:00",
+      "is_due": false
+    }
+  ],
+  "members": [
+    {
+      "id": "anna",
+      "name": "Anna",
+      "color": "#538B78",
+      "active": true
+    },
+    {
+      "id": "ben",
+      "name": "Ben",
+      "color": "#BA7854",
+      "active": true
+    },
+    {
+      "id": "mia",
+      "name": "Mia",
+      "color": "#887BA9",
+      "active": true
+    }
+  ],
+  "statistics": [
+    {
+      "id": "mia",
+      "name": "Mia",
+      "color": "#887BA9",
+      "active": true,
+      "count": 18,
+      "minutes": 245,
+      "tasks": [
+        {
+          "title": "Staubsaugen (Wohnzimmer)",
+          "count": 5,
+          "minutes": 100
+        },
+        {
+          "title": "Bad aufräumen",
+          "count": 4,
+          "minutes": 48
+        },
+        {
+          "title": "Geschirrspüler ausräumen",
+          "count": 4,
+          "minutes": 32
+        },
+        {
+          "title": "Wäsche aufhängen",
+          "count": 4,
+          "minutes": 60
+        },
+        {
+          "title": "Pflanzen gießen",
+          "count": 1,
+          "minutes": 5
+        }
+      ],
+      "share": 48.5
+    },
+    {
+      "id": "ben",
+      "name": "Ben",
+      "color": "#BA7854",
+      "active": true,
+      "count": 18,
+      "minutes": 240,
+      "tasks": [
+        {
+          "title": "Bad aufräumen",
+          "count": 5,
+          "minutes": 60
+        },
+        {
+          "title": "Geschirrspüler ausräumen",
+          "count": 5,
+          "minutes": 40
+        },
+        {
+          "title": "Staubsaugen (Wohnzimmer)",
+          "count": 4,
+          "minutes": 80
+        },
+        {
+          "title": "Wäsche aufhängen",
+          "count": 4,
+          "minutes": 60
+        }
+      ],
+      "share": 47.5
+    },
+    {
+      "id": "anna",
+      "name": "Anna",
+      "color": "#538B78",
+      "active": true,
+      "count": 1,
+      "minutes": 20,
+      "tasks": [
+        {
+          "title": "Bettwäsche wechseln",
+          "count": 1,
+          "minutes": 20
+        }
+      ],
+      "share": 4.0
+    }
+  ],
+  "window_start": "2026-08-28T10:00:00+00:00",
+  "total_minutes": 505
+}
