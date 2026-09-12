@@ -4,6 +4,7 @@
   "codeowners": [],
   "config_flow": true,
   "dependencies": [
+    "frontend",
     "http"
   ],
   "documentation": "https://github.com/steiiin/hacs-chores",

@@ -4,7 +4,7 @@
     "step": {
       "user": {
         "title": "Set up HACS Chores",
-        "description": "After setup, use Configure to create tasks and household members. Add the bundled dashboard resource as described in the README."
+        "description": "After setup, use Configure to create tasks and household members. The bundled dashboard cards load automatically."
       }
     },
     "abort": {

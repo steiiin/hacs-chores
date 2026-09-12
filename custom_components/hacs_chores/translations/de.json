@@ -4,7 +4,7 @@
     "step": {
       "user": {
         "title": "HACS Chores einrichten",
-        "description": "Nach dem Hinzufügen über „Konfigurieren“ Aufgaben und Haushaltsmitglieder anlegen. Die Dashboard-Karten werden mitgeliefert; die Ressource einmal nach Anleitung hinzufügen."
+        "description": "Nach dem Hinzufügen über „Konfigurieren“ Aufgaben und Haushaltsmitglieder anlegen. Die mitgelieferten Dashboard-Karten werden automatisch geladen."
       }
     },
     "abort": {

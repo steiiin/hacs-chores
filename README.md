@@ -18,6 +18,7 @@ Für die manuelle Aufnahme als benutzerdefiniertes Repository ist keine vorherig
 - Aufgabe: Kategorie, Titel, ausführliche Beschreibung, Wiederholung, Priorität, geschätzter Aufwand in Minuten und Aktivierung/Pause.
 - Mitglied: Name, Farbe `#RRGGBB`, Aktivierung/Pause. Identitäten bleiben bei Umbenennungen stabil.
 - Pro Aufgabe ein virtuelles Gerät mit einem Fälligkeitssensor und drei weiteren Sensoren.
+- Automatisch geladene Dashboard-Karten; keine manuelle JavaScript-Ressource erforderlich.
 - Übersicht mit anpassbarer Breite, unterschiedlich hohen Kacheln im CSS-Grid, Kategorieauswahl und optionaler Beschränkung auf fällige Aufgaben.
 - Antippen öffnet Beschreibung und Mitgliederauswahl. Erfolgreiches Abhaken löst eine kurze Animation aus; die Aufgabe wechselt zu ihrem nächsten Termin. Nicht fällige Aufgaben zeigen ihre Informationen, können aber noch nicht erledigt werden.
 - Rückgängig für die zuletzt gebuchte Erledigung einer Aufgabe innerhalb von zehn Minuten, sofern der Terminplan nicht zwischenzeitlich geändert wurde.
@@ -27,6 +28,22 @@ Für die manuelle Aufnahme als benutzerdefiniertes Repository ist keine vorherig
 - Lokaler Betrieb ohne zusätzliches Docker-Image, externen Dienst, CDN oder JavaScript-Buildschritt.
 
 Die erste Oberfläche ist auf Deutsch ausgelegt. Es gibt englische Grundtexte für die Einrichtung; Auswahlbeschriftungen und Karten sind noch nicht vollständig mehrsprachig.
+
+## Dashboard-Karten
+
+Nach dem Einrichten der Integration erscheinen **HACS Chores – Aufgaben** und **HACS Chores – Statistik** automatisch im Dashboard-Karteneditor. Die Integration lädt das mitgelieferte JavaScript selbst; unter **Einstellungen → Dashboards → Ressourcen** ist kein manueller Eintrag nötig.
+
+Die Karten können alternativ direkt per YAML eingefügt werden:
+
+```yaml
+type: custom:hacs-chores-card
+title: Unser Haushalt
+```
+
+```yaml
+type: custom:hacs-chores-stats-card
+title: Unser Einsatz
+```
 
 ## Terminregeln
 

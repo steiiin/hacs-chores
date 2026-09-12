@@ -2,7 +2,7 @@
 from pathlib import Path
 
 import voluptuous as vol
-from homeassistant.components import websocket_api
+from homeassistant.components import frontend, websocket_api
 from homeassistant.components.http import StaticPathConfig
 from homeassistant.const import Platform
 from homeassistant.core import callback
@@ -10,7 +10,7 @@ from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers import entity_registry as er, device_registry as dr
 from homeassistant.helpers.dispatcher import async_dispatcher_connect, async_dispatcher_send
 
-from .const import DOMAIN, FRONTEND_URL, SIGNAL
+from .const import DOMAIN, FRONTEND_URL, SIGNAL, VERSION
 from .coordinator import ChoresCoordinator
 
 PLATFORMS = [Platform.BINARY_SENSOR, Platform.SENSOR]
@@ -28,6 +28,7 @@ async def async_setup(hass, _config):
     await hass.http.async_register_static_paths([
         StaticPathConfig(FRONTEND_URL, str(Path(__file__).parent / "frontend" / "chores-cards.js"), False)
     ])
+    frontend.add_extra_js_url(hass, f"{FRONTEND_URL}?v={VERSION}")
     for command in (ws_subscribe, ws_complete, ws_undo):
         websocket_api.async_register_command(hass, command)
 
