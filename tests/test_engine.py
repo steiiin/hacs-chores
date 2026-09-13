@@ -17,9 +17,10 @@ def dt(value):
     return datetime.fromisoformat(value).astimezone(UTC)
 
 
-def task(kind="daily", **rule):
+def task(kind="daily", allow_early_completion=False, **rule):
     return {"id": "vacuum", "title": "Staubsaugen", "category": "Putzen", "description": "Unter dem Tisch auch.",
             "priority": 2, "effort_minutes": 20, "enabled": True,
+            "allow_early_completion": allow_early_completion,
             "schedule": {"kind": kind, "start_date": "2026-09-01", "time": "08:00:00", "interval": 1, **rule}}
 
 
@@ -97,6 +98,42 @@ class HouseholdTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.complete("b")
         self.assertEqual(len(self.house.data["history"]), 1)
+
+    def test_optional_completion_before_due_has_30_minute_cooldown(self):
+        now = dt("2026-08-31T10:00:00+02:00")
+        house = engine.Household(
+            [task(allow_early_completion=True)], MEMBERS, ZONE, now=now
+        )
+        due = house.data["states"]["vacuum"]["due_at"]
+
+        before = house.snapshot(now)["tasks"][0]
+        self.assertFalse(before["is_due"])
+        self.assertTrue(before["is_doable"])
+
+        house.complete("vacuum", "a", due, now=now)
+        during = house.snapshot(now + timedelta(minutes=29, seconds=59))["tasks"][0]
+        self.assertFalse(during["is_due"])
+        self.assertFalse(during["is_doable"])
+        self.assertEqual(during["cooldown_until"], engine.stamp(now + timedelta(minutes=30)))
+        with self.assertRaisesRegex(ValueError, "30 Minuten"):
+            house.complete("vacuum", "b", due, now=now + timedelta(minutes=29, seconds=59))
+
+        after = house.snapshot(now + timedelta(minutes=30))["tasks"][0]
+        self.assertTrue(after["is_doable"])
+        self.assertIsNone(after["cooldown_until"])
+        house.complete("vacuum", "b", due, now=now + timedelta(minutes=30))
+        self.assertEqual(len(house.data["history"]), 2)
+
+    def test_existing_task_defaults_to_due_only(self):
+        now = dt("2026-08-31T10:00:00+02:00")
+        existing = task()
+        del existing["allow_early_completion"]
+        house = engine.Household([existing], MEMBERS, ZONE, now=now)
+        item = house.snapshot(now)["tasks"][0]
+        self.assertFalse(item["allow_early_completion"])
+        self.assertFalse(item["is_doable"])
+        with self.assertRaisesRegex(ValueError, "noch nicht fällig"):
+            house.complete("vacuum", "a", item["due_at"], now=now)
 
     def test_persistence_round_trip(self):
         self.complete()

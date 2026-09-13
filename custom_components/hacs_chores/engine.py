@@ -8,6 +8,8 @@ import re
 from uuid import uuid4
 from zoneinfo import ZoneInfo
 
+COOLDOWN = timedelta(minutes=30)
+
 
 def parse(value: str) -> datetime:
     result = datetime.fromisoformat(value)
@@ -37,6 +39,8 @@ def validate_task(task: dict) -> None:
         raise ValueError("invalid_priority")
     if not 1 <= task["effort_minutes"] <= 1440:
         raise ValueError("invalid_effort")
+    if not isinstance(task.get("allow_early_completion", False), bool):
+        raise ValueError("invalid_allow_early_completion")
     rule = task["schedule"]
     date.fromisoformat(rule["start_date"])
     clock = time.fromisoformat(rule["time"])
@@ -106,6 +110,8 @@ class Household:
         now = now or datetime.now(UTC)
         zone = ZoneInfo(timezone)
         for task_id, task in self.tasks.items():
+            # Tasks created before this option existed keep their original behavior.
+            task.setdefault("allow_early_completion", False)
             validate_task(task)
             state = self.data["states"].get(task_id)
             signature = {"schedule": task["schedule"], "timezone": timezone}
@@ -132,7 +138,9 @@ class Household:
             raise ValueError("Aufgabe oder Mitglied ist deaktiviert.")
         if expected_due != state["due_at"]:
             raise ValueError("Dieser Termin wurde bereits erledigt oder geändert. Ansicht aktualisieren.")
-        if now < parse(state["due_at"]):
+        if state["last_done"] and now - parse(state["last_done"]) < COOLDOWN:
+            raise ValueError("Diese Aufgabe kann erst 30 Minuten nach der letzten Erledigung erneut erledigt werden.")
+        if now < parse(state["due_at"]) and not task["allow_early_completion"]:
             raise ValueError("Diese Aufgabe ist noch nicht fällig.")
         rule = task["schedule"]
         if rule["kind"] == "after_completion":
@@ -173,10 +181,16 @@ class Household:
         for task_id, task in self.tasks.items():
             state = self.data["states"][task_id]
             member = self.members.get(state["last_member_id"])
+            is_due = task["enabled"] and parse(state["due_at"]) <= now
+            cooldown_until = parse(state["last_done"]) + COOLDOWN if state["last_done"] else None
+            is_in_cooldown = cooldown_until is not None and now < cooldown_until
+            can_otherwise_complete = task["enabled"] and (is_due or task["allow_early_completion"])
             tasks.append({
                 **task, **{k: v for k, v in state.items() if k != "signature"},
                 "last_member_name": member["name"] if member else state["last_member_name"],
-                "is_due": task["enabled"] and parse(state["due_at"]) <= now,
+                "is_due": is_due,
+                "is_doable": can_otherwise_complete and not is_in_cooldown,
+                "cooldown_until": stamp(cooldown_until) if can_otherwise_complete and is_in_cooldown else None,
             })
         tasks.sort(key=lambda t: (not t["enabled"], t["due_at"], -t["priority"], t["title"].casefold(), t["id"]))
         # A rolling 14 x 24-hour window. Immutable event effort avoids rewriting history.

@@ -36,6 +36,7 @@
           "priority": "Priority",
           "effort_minutes": "Estimated effort (minutes)",
           "enabled": "Enabled",
+          "allow_early_completion": "Allow completion when needed",
           "kind": "Recurrence"
         }
       },

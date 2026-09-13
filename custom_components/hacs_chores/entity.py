@@ -22,8 +22,11 @@ class HouseholdEntity(CoordinatorEntity):
 
     @property
     def open_chore_count(self):
-        """Return the number of enabled chores that are currently due."""
-        return sum(task["is_due"] for task in self.coordinator.data["tasks"])
+        """Return the number of chores that can be completed now."""
+        return sum(
+            task.get("is_doable", task["is_due"])
+            for task in self.coordinator.data["tasks"]
+        )
 
 
 class ChoreEntity(CoordinatorEntity):
@@ -47,4 +50,7 @@ class ChoreEntity(CoordinatorEntity):
     def extra_state_attributes(self):
         return {"task_id": self.task_id, "category": self.task["category"],
                 "priority": self.task["priority"], "effort_minutes": self.task["effort_minutes"],
-                "due_at": self.task["due_at"], "enabled": self.task["enabled"]}
+                "due_at": self.task["due_at"], "enabled": self.task["enabled"],
+                "allow_early_completion": self.task.get("allow_early_completion", False),
+                "is_doable": self.task.get("is_doable", self.task.get("is_due", False)),
+                "cooldown_until": self.task.get("cooldown_until")}

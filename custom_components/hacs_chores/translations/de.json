@@ -36,6 +36,7 @@
           "priority": "Priorität",
           "effort_minutes": "Geschätzter Aufwand (Minuten)",
           "enabled": "Aufgabe aktiv",
+          "allow_early_completion": "Bei Bedarf erledigen lassen",
           "kind": "Wiederholung"
         }
       },

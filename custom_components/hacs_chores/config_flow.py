@@ -70,7 +70,8 @@ class ChoresOptionsFlow(config_entries.OptionsFlow):
 
     async def async_step_task_add(self, user_input=None):
         self._task = {"id": uuid4().hex, "title": "", "category": "Putzen", "description": "",
-                      "priority": 2, "effort_minutes": 10, "enabled": True, "schedule": {}}
+                      "priority": 2, "effort_minutes": 10, "enabled": True,
+                      "allow_early_completion": False, "schedule": {}}
         return await self.async_step_task()
 
     async def async_step_task_edit(self, user_input=None):
@@ -82,7 +83,9 @@ class ChoresOptionsFlow(config_entries.OptionsFlow):
     async def async_step_task(self, user_input=None):
         errors = {}
         if user_input is not None:
-            self._task.update({key: user_input[key] for key in ("title", "category", "priority", "effort_minutes", "enabled")})
+            self._task.update({key: user_input[key] for key in (
+                "title", "category", "priority", "effort_minutes", "enabled", "allow_early_completion"
+            )})
             self._task["description"] = user_input.get("description", "")
             self._task["priority"] = int(self._task["priority"])
             self._task["effort_minutes"] = int(self._task["effort_minutes"])
@@ -94,6 +97,7 @@ class ChoresOptionsFlow(config_entries.OptionsFlow):
             else:
                 return await self.async_step_schedule()
         task = self._task
+        task.setdefault("allow_early_completion", False)
         return self.async_show_form(step_id="task", errors=errors, data_schema=vol.Schema({
             vol.Required("title", default=task["title"]): selector.TextSelector(),
             vol.Required("category", default=task["category"]): selector.TextSelector(),
@@ -101,6 +105,7 @@ class ChoresOptionsFlow(config_entries.OptionsFlow):
             vol.Required("priority", default=str(task["priority"])): select([("1", "Niedrig"), ("2", "Normal"), ("3", "Hoch"), ("4", "Dringend")]),
             vol.Required("effort_minutes", default=task["effort_minutes"]): number(1, 1440),
             vol.Required("enabled", default=task["enabled"]): selector.BooleanSelector(),
+            vol.Required("allow_early_completion", default=task["allow_early_completion"]): selector.BooleanSelector(),
             vol.Required("kind", default=task["schedule"].get("kind", "daily")): select(KINDS),
         }))
 

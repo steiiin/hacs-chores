@@ -15,13 +15,13 @@ Für die manuelle Aufnahme als benutzerdefiniertes Repository ist keine vorherig
 ## Funktionen
 
 - Aufgaben und Mitglieder unter **Einstellungen → Geräte & Dienste → HACS Chores → Konfigurieren** erstellen, bearbeiten und löschen.
-- Aufgabe: Kategorie, Titel, ausführliche Beschreibung, Wiederholung, Priorität, geschätzter Aufwand in Minuten und Aktivierung/Pause.
+- Aufgabe: Kategorie, Titel, ausführliche Beschreibung, Wiederholung, Priorität, geschätzter Aufwand in Minuten, Aktivierung/Pause und optional „Bei Bedarf erledigen lassen“.
 - Mitglied: Name, Farbe `#RRGGBB`, Aktivierung/Pause. Identitäten bleiben bei Umbenennungen stabil.
 - Pro Aufgabe ein virtuelles Gerät mit einem Fälligkeitssensor und drei weiteren Sensoren; zusätzlich zwei haushaltsweite Entitäten für die Anzahl offener Aufgaben und deren Verfügbarkeit als Binärwert.
 - Automatisch geladene Dashboard-Karten; keine manuelle JavaScript-Ressource erforderlich.
 - Übersicht mit anpassbarer Breite, unterschiedlich hohen Kacheln im CSS-Grid, Kategorieauswahl und optionaler Beschränkung auf fällige Aufgaben.
-- Kompaktkarte mit ein bis vier Rasterzeilen, Navigation zur Aufgabenansicht und einer konfigurierbaren Anzahl direkt abhakbarer Aufgaben. Ohne fällige Aufgaben wird sie gedimmt und deaktiviert.
-- Antippen öffnet Beschreibung und Mitgliederauswahl. Erfolgreiches Abhaken löst eine kurze Animation aus; die Aufgabe wechselt zu ihrem nächsten Termin. Nicht fällige Aufgaben zeigen ihre Informationen, können aber noch nicht erledigt werden.
+- Kompaktkarte mit ein bis vier Rasterzeilen, Navigation zur Aufgabenansicht und einer konfigurierbaren Anzahl direkt abhakbarer Aufgaben. Ohne aktuell erledigbare Aufgaben wird sie gedimmt und deaktiviert.
+- Antippen öffnet Beschreibung und Mitgliederauswahl. Erfolgreiches Abhaken löst eine kurze Animation aus; die Aufgabe wechselt zu ihrem nächsten Termin. Nicht fällige Aufgaben können nur erledigt werden, wenn „Bei Bedarf erledigen lassen“ aktiviert ist.
 - Rückgängig für die zuletzt gebuchte Erledigung einer Aufgabe innerhalb von zehn Minuten, sofern der Terminplan nicht zwischenzeitlich geändert wurde.
 - Statistik über die letzten **14 × 24 Stunden**, mit Aufwand, Anzahl, Anteil am Gesamtaufwand und häufigsten Aufgaben je Mitglied.
 - Verlauf in Home Assistants persistentem Speicher. Die Statistik benötigt keine Recorder-Historie.
@@ -77,6 +77,7 @@ Das Startdatum ist der erste mögliche Kalendertag. Bei einem wöchentlichen Pla
 6. Änderungen des Terminplans berechnen die Fälligkeit ab dem heutigen lokalen Tagesbeginn neu. Titel, Kategorie, Priorität und Aufwand ändern einen bestehenden Termin nicht.
 7. Pausierte Aufgaben bleiben gespeichert, sind nicht fällig und werden in der Übersicht ausgeblendet. Beim Wiederaktivieren kann der alte Termin überfällig sein.
 8. Sortierung: Fälligkeit aufsteigend; bei exakt gleichem Zeitpunkt Priorität absteigend; anschließend Titel. Priorität: Niedrig, Normal, Hoch, Dringend.
+9. Bei „Bei Bedarf erledigen lassen“ kann eine Aufgabe auch vor ihrem Termin abgehakt werden. Nach jeder Erledigung ist dieselbe Aufgabe 30 Minuten lang gesperrt, um versehentliche Doppelbuchungen zu verhindern.
 
 Freie RRULE-Eingabe, jährliche Termine, Feiertagsausnahmen und der fünfte Wochentag eines Monats sind in dieser ersten Version nicht enthalten. Die Beispiele „täglich“, „jeden Dienstag“ und „letzter Freitag im Monat“ sind vollständig in der Terminlogik implementiert.
 
@@ -95,8 +96,8 @@ Zusätzlich stellt das zentrale Gerät **HACS Chores** zwei haushaltsweite Entit
 
 | Information | Erwartete ID | Zustand |
 | --- | --- | --- |
-| Offene Aufgaben | `sensor.hacs_chores_open_chores` | Anzahl der aktuell fälligen, aktiven Aufgaben |
-| Aufgaben zu erledigen | `binary_sensor.hacs_chores_chores_to_do` | `on`, sobald mindestens eine aktive Aufgabe fällig ist; sonst `off` |
+| Offene Aufgaben | `sensor.hacs_chores_open_chores` | Anzahl der aktuell erledigbaren Aufgaben |
+| Aufgaben zu erledigen | `binary_sensor.hacs_chores_chores_to_do` | `on`, sobald mindestens eine Aufgabe erledigbar ist; sonst `off` |
 
 Bei Überfälligkeit bleibt `next_due` der noch offene Termin in der Vergangenheit. Erst eine Erledigung verschiebt ihn zum nächsten Termin. Die Entitätsattribute enthalten unter anderem stabile `task_id`, Kategorie, Priorität, Aufwand und `due_at`.
 

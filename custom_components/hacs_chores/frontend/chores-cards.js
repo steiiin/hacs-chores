@@ -2,6 +2,7 @@
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const color = value => /^#[0-9a-f]{6}$/i.test(value) ? value : '#538b78';
 const priority = ['', 'Niedrig', 'Normal', 'Hoch', 'Dringend'];
+const isDoable = task => task.is_doable ?? task.is_due;
 const css = `
  :host {
     display: block;
@@ -128,7 +129,7 @@ button:focus-visible, select:focus-visible {
 .tile.urgent {
     border-top-color: #bd714c;
 }
-.tile.future {
+.tile.future:not(.doable) {
     opacity: .8;
 }
 .tile:hover {
@@ -664,8 +665,8 @@ class ChoresBase extends HTMLElement {
     if (!task) return;
     const members = this._data.members.filter(m => m.active);
     this._dialog.innerHTML = `<div class="dialog-head"><div><div class="category">${esc(task.category)}</div><h3 id="dialog-title">${esc(task.title)}</h3></div><button class="close" aria-label="Schließen">×</button></div>
-      <p class="description">${esc(task.description)}</p><p class="subtitle muted">${task.effort_minutes} Minuten · ${this.date(task.due_at)}</p>
-      ${task.is_due?`<p>Wer hat die Aufgabe erledigt?</p><div class="members">${members.map(m => `<button class="member" data-member="${esc(m.id)}"><span class="avatar" style="--member-color:${color(m.color)}">${esc(m.name.slice(0,2).toUpperCase())}</span><span>${esc(m.name)}</span></button>`).join('')}</div>${!members.length?'<p>Lege zuerst ein aktives Mitglied in den Einstellungen der Integration an.</p>':''}`:'<p>Diese Aufgabe ist noch nicht fällig.</p>'}<p class="error" id="dialog-error" role="alert"></p>`;
+      <p class="description">${esc(task.description)}</p><p class="subtitle muted">${task.effort_minutes} Minuten · Nächster Termin ${this.date(task.due_at)}</p>
+      ${isDoable(task)?`<p>Wer hat die Aufgabe erledigt?</p><div class="members">${members.map(m => `<button class="member" data-member="${esc(m.id)}"><span class="avatar" style="--member-color:${color(m.color)}">${esc(m.name.slice(0,2).toUpperCase())}</span><span>${esc(m.name)}</span></button>`).join('')}</div>${!members.length?'<p>Lege zuerst ein aktives Mitglied in den Einstellungen der Integration an.</p>':''}`:task.cooldown_until?`<p>Erneut erledigbar ab ${this.date(task.cooldown_until)}.</p>`:'<p>Diese Aufgabe ist noch nicht fällig.</p>'}<p class="error" id="dialog-error" role="alert"></p>`;
     this._dialog.setAttribute('aria-labelledby','dialog-title');
     this._dialog.querySelector('.close').addEventListener('click', () => this._dialog.close());
     this._dialog.querySelectorAll('[data-member]').forEach(button => button.addEventListener('click', () => this.complete(task, button.dataset.member)));
@@ -726,13 +727,13 @@ class ChoresOverviewCard extends ChoresBase {
   }
   tile(task) {
     const done = this._celebrate === task.id;
-    return `<div class="cell"><button class="tile ${task.is_due?'due':'future'} ${task.priority>=3?'urgent':''} ${done?'celebrate':''}" data-task="${esc(task.id)}" ${this._pending?.id===task.id?'aria-busy="true"':''}>
+    return `<div class="cell"><button class="tile ${task.is_due?'due':'future'} ${isDoable(task)?'doable':''} ${task.priority>=3?'urgent':''} ${done?'celebrate':''}" data-task="${esc(task.id)}" ${this._pending?.id===task.id?'aria-busy="true"':''}>
       ${done?'<span class="check" aria-hidden="true">✓</span>':''}<div class="category">${esc(task.category)}</div><h3>${esc(task.title)}</h3>
       ${task.description?`<p class="description muted">${esc(task.description)}</p>`:''}
-      <div class="tags"><span class="tag ${task.priority>=3?'high':''}">${priority[task.priority]}</span><span class="tag">${task.effort_minutes} Min.</span></div>
+      <div class="tags"><span class="tag ${task.priority>=3?'high':''}">${priority[task.priority]}</span><span class="tag">${task.effort_minutes} Min.</span>${task.allow_early_completion?'<span class="tag">Bei Bedarf</span>':''}</div>
       <div class="date">${done?'Erledigt ✓':`${task.is_due?'Fällig':'Nächster Termin'} · ${this.date(task.due_at)}`}</div>
       ${task.last_done?`<div class="last muted">Zuletzt ${esc(task.last_member_name)} · ${this.date(task.last_done)}</div>`:''}
-      ${!task.is_due && task.last_done?'<div class="done-label">Für diesen Durchgang erledigt ✓</div>':''}
+      ${task.cooldown_until?`<div class="done-label">Erneut erledigbar ab ${this.date(task.cooldown_until)}</div>`:!task.is_due && task.last_done && !task.allow_early_completion?'<div class="done-label">Für diesen Durchgang erledigt ✓</div>':''}
     </button></div>`;
   }
   masonry() {
@@ -778,17 +779,17 @@ class ChoresQuickCard extends ChoresBase {
     const limitValue = Number(this._config.max_tasks ?? 3);
     const limit = Number.isFinite(limitValue) ? Math.min(20,Math.max(1,Math.trunc(limitValue))) : 3;
     const tasks = this._data.tasks
-      .filter(task => task.enabled && task.is_due)
+      .filter(task => task.enabled && isDoable(task))
       .sort((a,b) => a.due_at.localeCompare(b.due_at) || b.priority-a.priority || a.title.localeCompare(b.title,'de') || a.id.localeCompare(b.id))
       .slice(0,limit);
-    const count = this._data.tasks.filter(task => task.enabled && task.is_due).length;
+    const count = this._data.tasks.filter(task => task.enabled && isDoable(task)).length;
     const title = this._config.title || 'Aufgaben';
     const disabled = count === 0;
     const countLabel = disabled ? 'Alles erledigt' : `${count} ${count === 1 ? 'Aufgabe' : 'Aufgaben'} offen`;
     const navLabel = `${title}: ${countLabel}${disabled ? '' : '. Zur Aufgabenansicht'}`;
     this.body(`<div class="quick-card ${disabled?'disabled':''}" role="button" ${disabled?'aria-disabled="true"':'tabindex="0"'} aria-label="${esc(navLabel)}">
       <div class="quick-summary"><span class="quick-icon"><ha-icon icon="${disabled?'mdi:check-all':'mdi:format-list-checks'}"></ha-icon></span><div class="quick-copy"><div class="eyebrow">${esc(title)}</div><div class="quick-title"><span class="quick-title-full">${countLabel}</span><span class="quick-title-short">${disabled?'Erledigt':`${count} offen`}</span></div></div><span class="quick-arrow" aria-hidden="true">›</span></div>
-      ${tasks.length ? `<div class="quick-tasks">${tasks.map(task => `<button class="quick-task" data-task="${esc(task.id)}" aria-label="${esc(task.title)} erledigen"><span class="category">${esc(task.category)}</span><strong>${esc(task.title)}</strong><small>Fällig · ${this.date(task.due_at)}</small></button>`).join('')}</div>` : ''}
+      ${tasks.length ? `<div class="quick-tasks">${tasks.map(task => `<button class="quick-task" data-task="${esc(task.id)}" aria-label="${esc(task.title)} erledigen"><span class="category">${esc(task.category)}</span><strong>${esc(task.title)}</strong><small>${task.is_due?'Fällig':'Bei Bedarf'} · ${this.date(task.due_at)}</small></button>`).join('')}</div>` : ''}
     </div>`);
     const card = this.shadowRoot.querySelector('.quick-card');
     card.addEventListener('click', event => {

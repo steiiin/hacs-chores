@@ -79,9 +79,10 @@ class EntityTests(unittest.IsolatedAsyncioTestCase):
             entry=SimpleNamespace(entry_id="household-entry"),
             data={
                 "tasks": [
-                    {"id": "due", "is_due": True},
-                    {"id": "future", "enabled": True, "is_due": False},
-                    {"id": "paused", "enabled": False, "is_due": False},
+                    {"id": "due", "is_due": True, "is_doable": True},
+                    {"id": "future", "enabled": True, "is_due": False, "is_doable": False},
+                    {"id": "optional", "enabled": True, "is_due": False, "is_doable": True},
+                    {"id": "paused", "enabled": False, "is_due": False, "is_doable": False},
                 ]
             },
         )
@@ -123,21 +124,24 @@ class EntityTests(unittest.IsolatedAsyncioTestCase):
         count = self.sensor.OpenChoresSensor(self.coordinator)
         pending = self.binary_sensor.ChoresToDoSensor(self.coordinator)
 
-        self.assertEqual(count.native_value, 1)
+        self.assertEqual(count.native_value, 2)
         self.assertTrue(pending.is_on)
 
         self.coordinator.data["tasks"][1]["is_due"] = True
-        self.assertEqual(count.native_value, 2)
+        self.coordinator.data["tasks"][1]["is_doable"] = True
+        self.assertEqual(count.native_value, 3)
         self.assertTrue(pending.is_on)
 
         for task in self.coordinator.data["tasks"]:
             task["is_due"] = False
+            task["is_doable"] = False
         self.assertEqual(count.native_value, 0)
         self.assertFalse(pending.is_on)
 
     def test_future_and_paused_chores_do_not_count(self):
         for task in self.coordinator.data["tasks"]:
             task["is_due"] = False
+            task["is_doable"] = False
 
         count = self.sensor.OpenChoresSensor(self.coordinator)
         pending = self.binary_sensor.ChoresToDoSensor(self.coordinator)
