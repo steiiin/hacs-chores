@@ -49,7 +49,7 @@ class SetupTests(unittest.IsolatedAsyncioTestCase):
                 DOMAIN="hacs_chores",
                 FRONTEND_URL="/hacs_chores/chores-cards.js",
                 SIGNAL="updated",
-                VERSION="0.2.0",
+                VERSION="0.2.1",
             ),
             f"{package}.coordinator": module(
                 f"{package}.coordinator", ChoresCoordinator=object
@@ -110,7 +110,7 @@ class SetupTests(unittest.IsolatedAsyncioTestCase):
         )
 
         self.assertTrue(await integration.async_setup(hass, {}))
-        self.assertEqual(loaded_urls, ["/hacs_chores/chores-cards.js?v=0.2.0"])
+        self.assertEqual(loaded_urls, ["/hacs_chores/chores-cards.js?v=0.2.1"])
         self.assertEqual(len(static_paths), 1)
         self.assertEqual(static_paths[0].url_path, "/hacs_chores/chores-cards.js")
         self.assertTrue(static_paths[0].path.endswith("frontend/chores-cards.js"))

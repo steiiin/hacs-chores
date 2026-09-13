@@ -28,7 +28,13 @@
       Object.assign(data, history.get(message.completion_id)); publish(); return {};
     },
   };
-  document.querySelectorAll('hacs-chores-card,hacs-chores-stats-card,hacs-chores-quick-card').forEach(card => {card.setConfig({});card.hass=hass;});
+  for (const tag of ['hacs-chores-quick-card','hacs-chores-card','hacs-chores-stats-card']) {
+    const card = document.createElement(tag);
+    if (typeof card.setConfig !== 'function') throw new Error(`${tag} did not construct as a dashboard card.`);
+    card.setConfig({});
+    card.hass = hass;
+    document.querySelector('#cards').append(card);
+  }
   let dark = false;
   document.querySelector('#dark').onclick = () => {
     dark = !dark;

@@ -2,7 +2,7 @@
 
 Wiederkehrende Haushaltsaufgaben für Home Assistant mit Einstellungen, vier Entitäten je Aufgabe und drei mitgelieferten Dashboard-Karten.
 
-**Version 0.2.0 – noch keine auf einer echten HA-Instanz freigegebene Version.** Zielversion: Home Assistant 2026.9 oder neuer. Python-Logik und Speicherabläufe sind mit 29 Tests geprüft. Python und JavaScript bestehen die Syntaxprüfungen; die lokale Kartenvorschau wurde breit und schmal visuell geprüft. Die Prüfung der HA-Einrichtung, Entitäten und HACS-Installation steht noch aus. Die mitgelieferten GitHub-Workflows wurden hier nicht ausgeführt. GitHub-Metadaten vor einer HACS-Installation ausfüllen.
+**Version 0.2.1 – noch keine auf einer echten HA-Instanz freigegebene Version.** Zielversion: Home Assistant 2026.9 oder neuer. Python-Logik und Speicherabläufe sind mit 29 Tests geprüft. Python und JavaScript bestehen die Syntaxprüfungen; die lokale Kartenvorschau wurde breit und schmal visuell geprüft. Die Prüfung der HA-Einrichtung, Entitäten und HACS-Installation steht noch aus. Die mitgelieferten GitHub-Workflows wurden hier nicht ausgeführt. GitHub-Metadaten vor einer HACS-Installation ausfüllen.
 
 ## Reicht ein GitHub-Repository?
 
