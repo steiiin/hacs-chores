@@ -1,4 +1,4 @@
-/* HACS Chores 0.1.0 — native custom elements, no CDN or build step. */
+/* HACS Chores 0.2.0 — native custom elements, no CDN or build step. */
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const color = value => /^#[0-9a-f]{6}$/i.test(value) ? value : '#538b78';
 const priority = ['', 'Niedrig', 'Normal', 'Hoch', 'Dringend'];
@@ -16,6 +16,9 @@ const css = `
  .tile.celebrate{animation:done .85s ease both;border-color:#528a62}.check{font-size:30px;color:#528a62;float:right;margin:0 0 8px 8px}@keyframes done{0%{transform:scale(1)}35%{transform:scale(.95);background:#e1efdb}70%{transform:scale(1.025)}100%{transform:scale(1)}}
  dialog{color:var(--primary-text-color,#233e34);background:var(--ha-card-background,var(--card-background-color,#fafaf6));border:1px solid var(--divider-color,#dce4da);border-radius:24px;padding:26px;width:min(440px,calc(100vw - 28px));max-height:85vh;overflow:auto;box-shadow:0 24px 100px #0004}dialog::backdrop{background:#14271f80;backdrop-filter:blur(3px)}.dialog-head{display:flex;justify-content:space-between;gap:16px;align-items:start;margin-bottom:12px}.close{background:none;border:0;font-size:24px;padding:0 4px}.members{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:18px}.member{display:flex;align-items:center;gap:10px;text-align:left;padding:12px;border-radius:13px;border:1px solid var(--divider-color,#dce4da);background:var(--secondary-background-color,#f2f4ee);overflow-wrap:anywhere}.avatar{display:grid;place-items:center;width:35px;height:35px;flex:0 0 35px;border-radius:50%;color:#fff;background:var(--member-color,#538b78);font-size:13px;font-weight:750;text-shadow:0 1px 2px #0008}
  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,245px),1fr));gap:14px}.person{border:1px solid var(--divider-color,#dce4da);border-radius:17px;padding:18px;min-width:0}.person-head{display:flex;align-items:center;gap:10px;margin-bottom:18px}.person-head strong{overflow-wrap:anywhere}.amount{font-size:29px;letter-spacing:-.7px}.amount small{font-size:13px;letter-spacing:0}.stat-sub{font-size:12px;margin:6px 0 12px}.bar{height:7px;border-radius:10px;background:var(--secondary-background-color,#edf0e8);overflow:hidden}.bar span{height:100%;display:block;background:var(--member-color,#538b78);border-radius:10px}.task-list{list-style:none;margin:15px 0 0;padding:0}.task-list li{display:flex;gap:12px;justify-content:space-between;padding:9px 0;border-top:1px solid var(--divider-color,#e5e9e0);font-size:12px}.task-list li span:first-child{overflow-wrap:anywhere}.task-list li span:last-child{white-space:nowrap;font-weight:650}
+ :host(.quick-host){height:100%;min-height:64px;container-type:size;contain-intrinsic-block-size:124px}:host(.quick-host) ha-card{height:100%}:host(.quick-host) .wrap{height:100%;padding:0}:host(.quick-host) .wrap>.eyebrow:first-child{padding:18px 18px 0}:host(.quick-host) .wrap>p{margin-left:18px;margin-right:18px}.quick-card{height:100%;min-height:64px;position:relative;display:grid;grid-template-columns:minmax(180px,.8fr) minmax(0,2fr);gap:12px;align-items:stretch;padding:12px;cursor:pointer}.quick-card:focus-visible{outline:3px solid var(--primary-color,#43755e);outline-offset:-3px}.quick-card.disabled{cursor:default;opacity:.55;grid-template-columns:1fr}.quick-card.disabled .quick-summary{justify-self:center}.quick-summary{display:flex;align-items:center;gap:12px;min-width:0;padding:4px 6px}.quick-icon{display:grid;place-items:center;flex:0 0 42px;width:42px;height:42px;border-radius:14px;background:var(--secondary-background-color,#eef2e9);color:var(--primary-color,#43755e)}.quick-icon ha-icon{--mdc-icon-size:24px}.quick-copy{min-width:0}.quick-copy .eyebrow{margin-bottom:3px}.quick-title{font-size:17px;font-weight:650;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.quick-title-short{display:none}.quick-arrow{margin-left:auto;color:var(--secondary-text-color,#6c7e73);font-size:23px}.quick-tasks{display:flex;gap:8px;min-width:0;overflow-x:auto;scrollbar-width:thin}.quick-task{min-width:min(155px,65vw);flex:1 0 0;display:flex;flex-direction:column;justify-content:center;text-align:left;border:1px solid var(--divider-color,#dce4da);border-radius:14px;padding:10px 12px;background:var(--secondary-background-color,#f0f3ec);overflow:hidden}.quick-task:hover{border-color:var(--primary-color,#43755e)}.quick-task .category{margin:0 0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.quick-task strong{font-size:13px;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.quick-task small{display:none;color:var(--secondary-text-color,#6c7e73);margin-top:5px;white-space:nowrap}.quick-card.disabled .quick-arrow{display:none}
+ @container(max-width:420px) and (max-height:124px){.quick-title-full{display:none}.quick-title-short{display:inline}}
+ @container(min-height:125px){.quick-card{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr);gap:6px}.quick-summary{padding:0 6px}.quick-icon{width:38px;height:38px;flex-basis:38px}.quick-task{justify-content:flex-start;min-width:min(170px,72vw);padding:12px}.quick-task strong{white-space:normal}.quick-task small{display:block}}
  @media(max-width:440px){.wrap{padding:18px}h2{font-size:23px}.members{grid-template-columns:1fr}}@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 `;
 
@@ -88,6 +91,40 @@ class ChoresBase extends HTMLElement {
     }
     return true;
   }
+  openTask(task) {
+    if (!task) return;
+    const members = this._data.members.filter(m => m.active);
+    this._dialog.innerHTML = `<div class="dialog-head"><div><div class="category">${esc(task.category)}</div><h3 id="dialog-title">${esc(task.title)}</h3></div><button class="close" aria-label="Schließen">×</button></div>
+      <p class="description">${esc(task.description)}</p><p class="subtitle muted">${task.effort_minutes} Minuten · ${this.date(task.due_at)}</p>
+      ${task.is_due?`<p>Wer hat die Aufgabe erledigt?</p><div class="members">${members.map(m => `<button class="member" data-member="${esc(m.id)}"><span class="avatar" style="--member-color:${color(m.color)}">${esc(m.name.slice(0,2).toUpperCase())}</span><span>${esc(m.name)}</span></button>`).join('')}</div>${!members.length?'<p>Lege zuerst ein aktives Mitglied in den Einstellungen der Integration an.</p>':''}`:'<p>Diese Aufgabe ist noch nicht fällig.</p>'}<p class="error" id="dialog-error" role="alert"></p>`;
+    this._dialog.setAttribute('aria-labelledby','dialog-title');
+    this._dialog.querySelector('.close').addEventListener('click', () => this._dialog.close());
+    this._dialog.querySelectorAll('[data-member]').forEach(button => button.addEventListener('click', () => this.complete(task, button.dataset.member)));
+    this._dialog.showModal();
+  }
+  async complete(task, memberId) {
+    if (this._pending) return;
+    this._pending = {...task};
+    this._actionError = null;
+    const dialog = this._dialog;
+    dialog.querySelectorAll('[data-member]').forEach(b => {b.disabled = true;});
+    try {
+      const result = await this._hass.callWS({type:'hacs_chores/complete',task_id:task.id,member_id:memberId,due_at:task.due_at});
+      dialog.close();
+      this._celebrate = task.id;
+      this._undo = result.completion_id;
+      this.render();
+      clearTimeout(this._doneTimer);
+      this._doneTimer = setTimeout(() => {this._pending=null;this._celebrate=null;this.render();}, 1200);
+    } catch (error) {
+      this._pending = null;
+      const message = error.message || 'Speichern fehlgeschlagen. Bitte erneut versuchen.';
+      dialog.querySelector('#dialog-error').textContent = message;
+      dialog.querySelectorAll('[data-member]').forEach(b => {b.disabled = false;});
+      this._actionError = message;
+      this.render();
+    }
+  }
 }
 
 class ChoresOverviewCard extends ChoresBase {
@@ -135,40 +172,6 @@ class ChoresOverviewCard extends ChoresBase {
     this._resize = new ResizeObserver(entries => entries.forEach(entry => size(entry.target)));
     this.shadowRoot.querySelectorAll('.tile').forEach(tile => { size(tile); this._resize.observe(tile); });
   }
-  openTask(task) {
-    if (!task) return;
-    const members = this._data.members.filter(m => m.active);
-    this._dialog.innerHTML = `<div class="dialog-head"><div><div class="category">${esc(task.category)}</div><h3 id="dialog-title">${esc(task.title)}</h3></div><button class="close" aria-label="Schließen">×</button></div>
-      <p class="description">${esc(task.description)}</p><p class="subtitle muted">${task.effort_minutes} Minuten · ${this.date(task.due_at)}</p>
-      ${task.is_due?`<p>Wer hat die Aufgabe erledigt?</p><div class="members">${members.map(m => `<button class="member" data-member="${esc(m.id)}"><span class="avatar" style="--member-color:${color(m.color)}">${esc(m.name.slice(0,2).toUpperCase())}</span><span>${esc(m.name)}</span></button>`).join('')}</div>${!members.length?'<p>Lege zuerst ein aktives Mitglied in den Einstellungen der Integration an.</p>':''}`:'<p>Diese Aufgabe ist noch nicht fällig.</p>'}<p class="error" id="dialog-error" role="alert"></p>`;
-    this._dialog.setAttribute('aria-labelledby','dialog-title');
-    this._dialog.querySelector('.close').addEventListener('click', () => this._dialog.close());
-    this._dialog.querySelectorAll('[data-member]').forEach(button => button.addEventListener('click', () => this.complete(task, button.dataset.member)));
-    this._dialog.showModal();
-  }
-  async complete(task, memberId) {
-    if (this._pending) return;
-    this._pending = {...task};
-    this._actionError = null;
-    const dialog = this._dialog;
-    dialog.querySelectorAll('[data-member]').forEach(b => {b.disabled = true;});
-    try {
-      const result = await this._hass.callWS({type:'hacs_chores/complete',task_id:task.id,member_id:memberId,due_at:task.due_at});
-      dialog.close();
-      this._celebrate = task.id;
-      this._undo = result.completion_id;
-      this.render();
-      clearTimeout(this._doneTimer);
-      this._doneTimer = setTimeout(() => {this._pending=null;this._celebrate=null;this.render();}, 1200);
-    } catch (error) {
-      this._pending = null;
-      const message = error.message || 'Speichern fehlgeschlagen. Bitte erneut versuchen.';
-      dialog.querySelector('#dialog-error').textContent = message;
-      dialog.querySelectorAll('[data-member]').forEach(b => {b.disabled = false;});
-      this._actionError = message;
-      this.render();
-    }
-  }
   async undo() {
     const completionId = this._undo;
     this.shadowRoot.getElementById('undo').disabled = true;
@@ -197,10 +200,59 @@ class ChoresStatsCard extends ChoresBase {
   }
 }
 
+class ChoresQuickCard extends ChoresBase {
+  constructor() {
+    super();
+    this.classList.add('quick-host');
+  }
+  static getStubConfig() { return {title:'Aufgaben',navigation_path:'/lovelace/chores',max_tasks:3}; }
+  getCardSize() { return 2; }
+  getGridOptions() { return {columns:12,min_columns:6,rows:2,min_rows:1,max_rows:4}; }
+  render() {
+    if (!this.ready()) return;
+    const limitValue = Number(this._config.max_tasks ?? 3);
+    const limit = Number.isFinite(limitValue) ? Math.min(20,Math.max(1,Math.trunc(limitValue))) : 3;
+    const tasks = this._data.tasks
+      .filter(task => task.enabled && task.is_due)
+      .sort((a,b) => a.due_at.localeCompare(b.due_at) || b.priority-a.priority || a.title.localeCompare(b.title,'de') || a.id.localeCompare(b.id))
+      .slice(0,limit);
+    const count = this._data.tasks.filter(task => task.enabled && task.is_due).length;
+    const title = this._config.title || 'Aufgaben';
+    const disabled = count === 0;
+    const countLabel = disabled ? 'Alles erledigt' : `${count} ${count === 1 ? 'Aufgabe' : 'Aufgaben'} offen`;
+    const navLabel = `${title}: ${countLabel}${disabled ? '' : '. Zur Aufgabenansicht'}`;
+    this.body(`<div class="quick-card ${disabled?'disabled':''}" role="button" ${disabled?'aria-disabled="true"':'tabindex="0"'} aria-label="${esc(navLabel)}">
+      <div class="quick-summary"><span class="quick-icon"><ha-icon icon="${disabled?'mdi:check-all':'mdi:format-list-checks'}"></ha-icon></span><div class="quick-copy"><div class="eyebrow">${esc(title)}</div><div class="quick-title"><span class="quick-title-full">${countLabel}</span><span class="quick-title-short">${disabled?'Erledigt':`${count} offen`}</span></div></div><span class="quick-arrow" aria-hidden="true">›</span></div>
+      ${tasks.length ? `<div class="quick-tasks">${tasks.map(task => `<button class="quick-task" data-task="${esc(task.id)}" aria-label="${esc(task.title)} erledigen"><span class="category">${esc(task.category)}</span><strong>${esc(task.title)}</strong><small>Fällig · ${this.date(task.due_at)}</small></button>`).join('')}</div>` : ''}
+    </div>`);
+    const card = this.shadowRoot.querySelector('.quick-card');
+    card.addEventListener('click', event => {
+      const taskButton = event.target.closest('[data-task]');
+      if (taskButton) {
+        this.openTask(tasks.find(task => task.id === taskButton.dataset.task));
+        return;
+      }
+      if (!disabled) this.navigate();
+    });
+    card.addEventListener('keydown', event => {
+      if (event.target !== card || disabled || (event.key !== 'Enter' && event.key !== ' ')) return;
+      event.preventDefault();
+      this.navigate();
+    });
+  }
+  navigate() {
+    const path = typeof this._config.navigation_path === 'string' && this._config.navigation_path.trim() ? this._config.navigation_path.trim() : '/lovelace/chores';
+    history.pushState(null,'',path);
+    window.dispatchEvent(new CustomEvent('location-changed'));
+  }
+}
+
 if (!customElements.get('hacs-chores-card')) customElements.define('hacs-chores-card', ChoresOverviewCard);
 if (!customElements.get('hacs-chores-stats-card')) customElements.define('hacs-chores-stats-card', ChoresStatsCard);
+if (!customElements.get('hacs-chores-quick-card')) customElements.define('hacs-chores-quick-card', ChoresQuickCard);
 window.customCards = window.customCards || [];
 for (const entry of [
   {type:'hacs-chores-card',name:'HACS Chores – Aufgaben',description:'Wiederkehrende Aufgaben mit Mitgliederauswahl',preview:true},
   {type:'hacs-chores-stats-card',name:'HACS Chores – Statistik',description:'Aufwand und häufigste Aufgaben der letzten 14 Tage',preview:true},
+  {type:'hacs-chores-quick-card',name:'HACS Chores – Kompakt',description:'Fällige Aufgaben und Navigation auf kleinem Raum',preview:true},
 ]) if (!window.customCards.some(card => card.type === entry.type)) window.customCards.push(entry);

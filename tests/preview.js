@@ -28,7 +28,7 @@
       Object.assign(data, history.get(message.completion_id)); publish(); return {};
     },
   };
-  document.querySelectorAll('hacs-chores-card,hacs-chores-stats-card').forEach(card => {card.setConfig({});card.hass=hass;});
+  document.querySelectorAll('hacs-chores-card,hacs-chores-stats-card,hacs-chores-quick-card').forEach(card => {card.setConfig({});card.hass=hass;});
   let dark = false;
   document.querySelector('#dark').onclick = () => {
     dark = !dark;

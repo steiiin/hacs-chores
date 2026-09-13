@@ -2,5 +2,5 @@
 DOMAIN = "hacs_chores"
 NAME = "HACS Chores"
 SIGNAL = f"{DOMAIN}_updated"
-VERSION = "0.1.0"
+VERSION = "0.2.0"
 FRONTEND_URL = "/hacs_chores/chores-cards.js"

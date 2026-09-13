@@ -1,8 +1,8 @@
 # HACS Chores
 
-Wiederkehrende Haushaltsaufgaben für Home Assistant mit Einstellungen, vier Entitäten je Aufgabe und zwei mitgelieferten Dashboard-Karten.
+Wiederkehrende Haushaltsaufgaben für Home Assistant mit Einstellungen, vier Entitäten je Aufgabe und drei mitgelieferten Dashboard-Karten.
 
-**Version 0.1.0 – erste Implementierung, noch keine auf einer echten HA-Instanz freigegebene Version.** Zielversion: Home Assistant 2026.9 oder neuer. Python-Logik und Speicherabläufe sind mit 27 Tests geprüft. Python und JavaScript bestehen die Syntaxprüfungen. Der Browser der Entwicklungsumgebung konnte die lokale Vorschau nicht öffnen; eine visuelle Prüfung sowie die Prüfung der HA-Einrichtung, Entitäten und HACS-Installation stehen noch aus. Die mitgelieferten GitHub-Workflows wurden hier nicht ausgeführt. GitHub-Metadaten vor einer HACS-Installation ausfüllen.
+**Version 0.2.0 – noch keine auf einer echten HA-Instanz freigegebene Version.** Zielversion: Home Assistant 2026.9 oder neuer. Python-Logik und Speicherabläufe sind mit 29 Tests geprüft. Python und JavaScript bestehen die Syntaxprüfungen; die lokale Kartenvorschau wurde breit und schmal visuell geprüft. Die Prüfung der HA-Einrichtung, Entitäten und HACS-Installation steht noch aus. Die mitgelieferten GitHub-Workflows wurden hier nicht ausgeführt. GitHub-Metadaten vor einer HACS-Installation ausfüllen.
 
 ## Reicht ein GitHub-Repository?
 
@@ -20,6 +20,7 @@ Für die manuelle Aufnahme als benutzerdefiniertes Repository ist keine vorherig
 - Pro Aufgabe ein virtuelles Gerät mit einem Fälligkeitssensor und drei weiteren Sensoren.
 - Automatisch geladene Dashboard-Karten; keine manuelle JavaScript-Ressource erforderlich.
 - Übersicht mit anpassbarer Breite, unterschiedlich hohen Kacheln im CSS-Grid, Kategorieauswahl und optionaler Beschränkung auf fällige Aufgaben.
+- Kompaktkarte mit ein bis vier Rasterzeilen, Navigation zur Aufgabenansicht und einer konfigurierbaren Anzahl direkt abhakbarer Aufgaben. Ohne fällige Aufgaben wird sie gedimmt und deaktiviert.
 - Antippen öffnet Beschreibung und Mitgliederauswahl. Erfolgreiches Abhaken löst eine kurze Animation aus; die Aufgabe wechselt zu ihrem nächsten Termin. Nicht fällige Aufgaben zeigen ihre Informationen, können aber noch nicht erledigt werden.
 - Rückgängig für die zuletzt gebuchte Erledigung einer Aufgabe innerhalb von zehn Minuten, sofern der Terminplan nicht zwischenzeitlich geändert wurde.
 - Statistik über die letzten **14 × 24 Stunden**, mit Aufwand, Anzahl, Anteil am Gesamtaufwand und häufigsten Aufgaben je Mitglied.
@@ -31,7 +32,7 @@ Die erste Oberfläche ist auf Deutsch ausgelegt. Es gibt englische Grundtexte f�
 
 ## Dashboard-Karten
 
-Nach dem Einrichten der Integration erscheinen **HACS Chores – Aufgaben** und **HACS Chores – Statistik** automatisch im Dashboard-Karteneditor. Die Integration lädt das mitgelieferte JavaScript selbst; unter **Einstellungen → Dashboards → Ressourcen** ist kein manueller Eintrag nötig.
+Nach dem Einrichten der Integration erscheinen **HACS Chores – Aufgaben**, **HACS Chores – Kompakt** und **HACS Chores – Statistik** automatisch im Dashboard-Karteneditor. Die Integration lädt das mitgelieferte JavaScript selbst; unter **Einstellungen → Dashboards → Ressourcen** ist kein manueller Eintrag nötig.
 
 Die Karten können alternativ direkt per YAML eingefügt werden:
 
@@ -43,6 +44,15 @@ title: Unser Haushalt
 ```yaml
 type: custom:hacs-chores-stats-card
 title: Unser Einsatz
+```
+
+Die Kompaktkarte lässt sich in einer Abschnittsansicht auf ein bis vier Rasterzeilen skalieren. Ein Klick auf die Kartenfläche navigiert zu `navigation_path`; die kleinen Aufgabenkarten öffnen direkt die Auswahl „Wer hat die Aufgabe erledigt?“.
+
+```yaml
+type: custom:hacs-chores-quick-card
+title: Aufgaben
+navigation_path: /lovelace/chores
+max_tasks: 3
 ```
 
 ## Terminregeln
