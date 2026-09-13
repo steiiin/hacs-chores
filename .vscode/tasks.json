@@ -8,7 +8,7 @@
       "args": [
         "-l",
         "-c",
-        "python3 -m http.server 8000 & preview_pid=$!; trap 'kill \"$preview_pid\" 2>/dev/null || true' EXIT INT TERM; until curl --silent --fail http://localhost:8000/tests/preview.html >/dev/null; do sleep 0.1; done; xdg-open http://localhost:8000/tests/preview.html; wait \"$preview_pid\"",
+        "python3 -m http.server 8000; xdg-open http://localhost:8000/tests/preview.html;",
       ],
       "options": {
         "env": {
