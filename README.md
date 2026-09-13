@@ -17,7 +17,7 @@ Für die manuelle Aufnahme als benutzerdefiniertes Repository ist keine vorherig
 - Aufgaben und Mitglieder unter **Einstellungen → Geräte & Dienste → HACS Chores → Konfigurieren** erstellen, bearbeiten und löschen.
 - Aufgabe: Kategorie, Titel, ausführliche Beschreibung, Wiederholung, Priorität, geschätzter Aufwand in Minuten und Aktivierung/Pause.
 - Mitglied: Name, Farbe `#RRGGBB`, Aktivierung/Pause. Identitäten bleiben bei Umbenennungen stabil.
-- Pro Aufgabe ein virtuelles Gerät mit einem Fälligkeitssensor und drei weiteren Sensoren.
+- Pro Aufgabe ein virtuelles Gerät mit einem Fälligkeitssensor und drei weiteren Sensoren; zusätzlich zwei haushaltsweite Entitäten für die Anzahl offener Aufgaben und deren Verfügbarkeit als Binärwert.
 - Automatisch geladene Dashboard-Karten; keine manuelle JavaScript-Ressource erforderlich.
 - Übersicht mit anpassbarer Breite, unterschiedlich hohen Kacheln im CSS-Grid, Kategorieauswahl und optionaler Beschränkung auf fällige Aufgaben.
 - Kompaktkarte mit ein bis vier Rasterzeilen, Navigation zur Aufgabenansicht und einer konfigurierbaren Anzahl direkt abhakbarer Aufgaben. Ohne fällige Aufgaben wird sie gedimmt und deaktiviert.
@@ -90,6 +90,13 @@ Die Hierarchie in der Oberfläche ist **HACS Chores → Staubsaugen (Wohnzimmer)
 | Nächster offener Termin | `sensor.staubsaugen_wohnzimmer_next_due` | Zeitstempel |
 | Zuletzt erledigt | `sensor.staubsaugen_wohnzimmer_last_completed` | Zeitstempel; anfangs unbekannt |
 | Zuletzt erledigt von | `sensor.staubsaugen_wohnzimmer_last_completed_by` | Name; anfangs unbekannt |
+
+Zusätzlich stellt das zentrale Gerät **HACS Chores** zwei haushaltsweite Entitäten bereit:
+
+| Information | Erwartete ID | Zustand |
+| --- | --- | --- |
+| Offene Aufgaben | `sensor.hacs_chores_open_chores` | Anzahl der aktuell fälligen, aktiven Aufgaben |
+| Aufgaben zu erledigen | `binary_sensor.hacs_chores_chores_to_do` | `on`, sobald mindestens eine aktive Aufgabe fällig ist; sonst `off` |
 
 Bei Überfälligkeit bleibt `next_due` der noch offene Termin in der Vergangenheit. Erst eine Erledigung verschiebt ihn zum nächsten Termin. Die Entitätsattribute enthalten unter anderem stabile `task_id`, Kategorie, Priorität, Aufwand und `due_at`.
 

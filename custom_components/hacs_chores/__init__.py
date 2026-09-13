@@ -23,6 +23,19 @@ def coordinator(hass):
     return result
 
 
+def _remove_stale_registry_entries(hass, entry, task_ids):
+    """Remove deleted chore resources while retaining the household summary."""
+    valid = {*task_ids, entry.entry_id}
+    registry = er.async_get(hass)
+    for entity in er.async_entries_for_config_entry(registry, entry.entry_id):
+        if entity.unique_id.split(":", 1)[0] not in valid:
+            registry.async_remove(entity.entity_id)
+    devices = dr.async_get(hass)
+    for device in dr.async_entries_for_config_entry(devices, entry.entry_id):
+        if any(domain == DOMAIN and identifier not in valid for domain, identifier in device.identifiers):
+            devices.async_update_device(device.id, remove_config_entry_id=entry.entry_id)
+
+
 async def async_setup(hass, _config):
     hass.data.setdefault(DOMAIN, {})
     await hass.http.async_register_static_paths([
@@ -54,15 +67,7 @@ async def async_setup_entry(hass, entry):
     hass.data[DOMAIN]["coordinator"] = manager
     entry.runtime_data = manager
     # Remove registry records belonging to tasks deleted through options.
-    registry = er.async_get(hass)
-    valid = set(manager.engine.tasks)
-    for entity in er.async_entries_for_config_entry(registry, entry.entry_id):
-        if entity.unique_id.split(":", 1)[0] not in valid:
-            registry.async_remove(entity.entity_id)
-    devices = dr.async_get(hass)
-    for device in dr.async_entries_for_config_entry(devices, entry.entry_id):
-        if any(domain == DOMAIN and identifier not in valid for domain, identifier in device.identifiers):
-            devices.async_update_device(device.id, remove_config_entry_id=entry.entry_id)
+    _remove_stale_registry_entries(hass, entry, manager.engine.tasks)
     try:
         await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     except BaseException:

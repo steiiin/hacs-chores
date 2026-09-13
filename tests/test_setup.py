@@ -32,6 +32,8 @@ class SetupTests(unittest.IsolatedAsyncioTestCase):
     async def test_setup_serves_and_automatically_loads_cards(self):
         package = "chores_setup_test_package"
         loaded_urls = []
+        entity_registry = module("homeassistant.helpers.entity_registry")
+        device_registry = module("homeassistant.helpers.device_registry")
         frontend = module(
             "homeassistant.components.frontend",
             add_extra_js_url=lambda hass, url: loaded_urls.append(url),
@@ -79,12 +81,8 @@ class SetupTests(unittest.IsolatedAsyncioTestCase):
                 "homeassistant.exceptions", HomeAssistantError=Exception
             ),
             "homeassistant.helpers": module("homeassistant.helpers"),
-            "homeassistant.helpers.entity_registry": module(
-                "homeassistant.helpers.entity_registry"
-            ),
-            "homeassistant.helpers.device_registry": module(
-                "homeassistant.helpers.device_registry"
-            ),
+            "homeassistant.helpers.entity_registry": entity_registry,
+            "homeassistant.helpers.device_registry": device_registry,
             "homeassistant.helpers.dispatcher": module(
                 "homeassistant.helpers.dispatcher",
                 async_dispatcher_connect=lambda *args: None,
@@ -115,6 +113,62 @@ class SetupTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(static_paths[0].url_path, "/hacs_chores/chores-cards.js")
         self.assertTrue(static_paths[0].path.endswith("frontend/chores-cards.js"))
         self.assertFalse(static_paths[0].cache_headers)
+
+        removed_entities = []
+        removed_devices = []
+        entity_entries = [
+            SimpleNamespace(entity_id="sensor.active", unique_id="active-task:due_at"),
+            SimpleNamespace(entity_id="sensor.deleted", unique_id="deleted-task:due_at"),
+            SimpleNamespace(
+                entity_id="sensor.open_chores",
+                unique_id="household-entry:open_chores",
+            ),
+        ]
+        device_entries = [
+            SimpleNamespace(
+                id="active-device", identifiers={("hacs_chores", "active-task")}
+            ),
+            SimpleNamespace(
+                id="deleted-device", identifiers={("hacs_chores", "deleted-task")}
+            ),
+            SimpleNamespace(
+                id="household-device",
+                identifiers={("hacs_chores", "household-entry")},
+            ),
+        ]
+        registry = SimpleNamespace(
+            async_remove=lambda entity_id: removed_entities.append(entity_id)
+        )
+        devices = SimpleNamespace(
+            async_update_device=lambda device_id, **kwargs: removed_devices.append(
+                (device_id, kwargs)
+            )
+        )
+        entity_registry.async_get = lambda _hass: registry
+        entity_registry.async_entries_for_config_entry = (
+            lambda _registry, _entry_id: entity_entries
+        )
+        device_registry.async_get = lambda _hass: devices
+        device_registry.async_entries_for_config_entry = (
+            lambda _devices, _entry_id: device_entries
+        )
+
+        integration._remove_stale_registry_entries(
+            hass,
+            SimpleNamespace(entry_id="household-entry"),
+            {"active-task": {}},
+        )
+
+        self.assertEqual(removed_entities, ["sensor.deleted"])
+        self.assertEqual(
+            removed_devices,
+            [
+                (
+                    "deleted-device",
+                    {"remove_config_entry_id": "household-entry"},
+                )
+            ],
+        )
 
     def test_manifest_declares_frontend_dependency(self):
         manifest = json.loads(

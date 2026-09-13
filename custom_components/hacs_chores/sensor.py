@@ -1,15 +1,30 @@
 """Next due date, last completion and household member."""
 from homeassistant.components.sensor import SensorDeviceClass, SensorEntity
 from .engine import parse
-from .entity import ChoreEntity
+from .entity import ChoreEntity, HouseholdEntity
 
 
 async def async_setup_entry(hass, entry, async_add_entities):
-    async_add_entities(
-        ChoreSensor(entry.runtime_data, task, key, name)
-        for task in entry.options.get("tasks", [])
-        for key, name in (("due_at", "Next due"), ("last_done", "Last completed"), ("last_member_name", "Last completed by"))
-    )
+    async_add_entities([
+        OpenChoresSensor(entry.runtime_data),
+        *(ChoreSensor(entry.runtime_data, task, key, name)
+          for task in entry.options.get("tasks", [])
+          for key, name in (("due_at", "Next due"), ("last_done", "Last completed"),
+                            ("last_member_name", "Last completed by"))),
+    ])
+
+
+class OpenChoresSensor(HouseholdEntity, SensorEntity):
+    """Number of chores that can be completed now."""
+
+    _attr_icon = "mdi:clipboard-list-outline"
+
+    def __init__(self, coordinator):
+        super().__init__(coordinator, "open_chores", "Open chores")
+
+    @property
+    def native_value(self):
+        return self.open_chore_count
 
 
 class ChoreSensor(ChoreEntity, SensorEntity):
