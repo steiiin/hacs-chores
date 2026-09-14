@@ -709,8 +709,8 @@ class ChoresOverviewCard extends ChoresBase {
     shown.sort((a,b) => a.due_at.localeCompare(b.due_at) || b.priority-a.priority || a.title.localeCompare(b.title, 'de') || a.id.localeCompare(b.id));
     const count = tasks.filter(t => t.is_due).length;
     const categories = [...new Set(tasks.map(t => t.category))].sort((a,b) => a.localeCompare(b,'de'));
-    this.body(`<div class="eyebrow">Gemeinsam zu Hause</div><header><div><h2>${esc(this._config.title || 'Unser Haushalt')}</h2><p class="subtitle muted">Kleine Aufgaben. Gemeinsam erledigt.</p></div><div class="counter"><strong>${count}</strong><small>jetzt fällig</small></div></header>
-      <div class="filters"><select aria-label="Kategorie"><option value="">Alle Kategorien</option>${categories.map(c => `<option value="${esc(c)}" ${c===selected?'selected':''}>${esc(c)}</option>`).join('')}</select></div>
+    this.body(`<div class="eyebrow">Gemeinsam zu Hause</div><header><div><h2>Was ist zu tun?</h2><p class="subtitle muted" style="display:none">Kleine Aufgaben. Gemeinsam erledigt.</p></div><div class="counter"><strong>${count}</strong><small>jetzt fällig</small></div></header>
+      <div class="filters" style="display:none"><select aria-label="Kategorie"><option value="">Alle Kategorien</option>${categories.map(c => `<option value="${esc(c)}" ${c===selected?'selected':''}>${esc(c)}</option>`).join('')}</select></div>
       <div class="grid">${shown.map(t => this.tile(t)).join('')}</div>
       ${!shown.length ? '<div class="empty">Hier ist gerade nichts offen.<br><span class="muted">Aufgaben lassen sich in den Einstellungen der Integration anlegen.</span></div>' : ''}
       <div id="status" role="status">${this._undo ? `<div class="toast"><span>Aufgabe erledigt ✓</span><button class="plain" id="undo">Rückgängig</button></div>` : ''}</div>
@@ -760,7 +760,7 @@ class ChoresStatsCard extends ChoresBase {
     if (!this.ready()) return;
     const people = this._data.statistics.filter(p => p.active || p.count);
     const total = this._data.total_minutes;
-    this.body(`<div class="eyebrow">Die letzten 14 Tage</div><header><div><h2>${esc(this._config.title || 'Unser Einsatz')}</h2><p class="subtitle muted">Jeder Handgriff zählt.</p></div><div class="counter"><strong>${total}</strong><small>Minuten gesamt</small></div></header>
+    this.body(`<div class="eyebrow">Die letzten 14 Tage</div><header><div><h2>Wer macht was?</h2><p class="subtitle muted" style="display:none">Jeder Handgriff zählt.</p></div><div class="counter"><strong>${total}</strong><small>Minuten gesamt</small></div></header>
       <div class="stats">${people.map(person => `<section class="person" style="--member-color:${color(person.color)}"><div class="person-head"><span class="avatar">${esc(person.name.slice(0,2).toUpperCase())}</span><strong>${esc(person.name)}${!person.active?' (inaktiv)':''}</strong></div>
       <div class="amount">${person.minutes} <small>Minuten</small></div><div class="stat-sub muted">${person.count} erledigt · ${person.share.toLocaleString('de-DE')} % des Aufwands</div>
       <div class="bar" role="meter" aria-label="Anteil am Aufwand" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${person.share}"><span style="width:${Math.min(100,Math.max(0,person.share))}%"></span></div>
